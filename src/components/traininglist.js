@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Iconbutton from "@material-ui/core/IconButton";
 import ListIcon from "@material-ui/icons/List";
 import Snackbar from "@material-ui/core/Snackbar";
 import Moment from "moment";
+import Tooltip from '@material-ui/core/Tooltip';
 import SkyLight from "react-skylight";
 
 class Traininglist extends Component {
-  constructor(params) {
-    super(params);
+  constructor(props) {
+    super(props);
     this.state = { alltrainings: [], showSnack: false };
     this.addModal = React.createRef();
   }
@@ -53,11 +55,12 @@ class Traininglist extends Component {
       {
         Header: "Date and time",
         accessor: "date",
-        Cell: ({ value }) => Moment(value).format("MMM Do YYYY, h:mm a")
+        Cell: ({ value }) => Moment(value).format("MMM Do YYYY, hh:mm a")
       },
       {
-        Header: "Duration (in minutes)",
-        accessor: "duration"
+        Header: "Duration (min)",
+        accessor: "duration",
+        maxWidth: 120
       },
       {
         Header: "Activity",
@@ -66,10 +69,14 @@ class Traininglist extends Component {
       {
         Header: "",
         accessor: "id",
+        maxWidth: 80,
         filterable: false,
         sortable: false,
         Cell: ({ value }) => (
-          <Button
+          <Tooltip title="Delete this training">
+          <Iconbutton
+            color="secondary"
+            size="small"
             onClick={() => {
               if (
                 window.confirm(
@@ -81,38 +88,43 @@ class Traininglist extends Component {
             aria-label="Delete"
           >
             <DeleteIcon fontSize="small" />
-          </Button>
+          </Iconbutton>
+          </Tooltip>
         )
       }
     ];
 
     const trainingModalStyle = {
-      marginTop: "-300px"
+      marginTop: "-300px",
+      minWidth: "500px"
     };
 
     return (
       <div>
+        <div className="buttonTest">
         <Button
-          style={{ position: "relative", top: "40px", left: "100px" }}
+          style={{ width: "150px" }}
           variant="contained"
           color="secondary"
           onClick={this.listAllTrainings}
         >
           <ListIcon /> Show all trainings
-        </Button>
+        </Button></div>
         <SkyLight
           dialogStyles={trainingModalStyle}
           hideOnOverlayClicked
           ref={this.addModal}
         >
-          <h3>All trainings</h3>
-          <ReactTable
-            filterable={true}
-            defaultPageSize={10}
-            className="-striped -highlight"
-            data={this.state.alltrainings}
-            columns={trainingColumns}
-          />
+          <div className="container">
+            <h3>All trainings</h3>
+            <ReactTable
+              filterable={true}
+              defaultPageSize={10}
+              className="-striped -highlight"
+              data={this.state.alltrainings}
+              columns={trainingColumns}
+            />
+          </div>
         </SkyLight>
         <Snackbar
           message={"Training deleted"}

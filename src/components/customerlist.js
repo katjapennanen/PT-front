@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactTable from "react-table";
 import Button from "@material-ui/core/Button";
+import Iconbutton from "@material-ui/core/IconButton";
 import ListAlt from "@material-ui/icons/ListAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import "react-table/react-table.css";
@@ -11,6 +12,9 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import SaveIcon from "@material-ui/icons/Save";
 import Snackbar from "@material-ui/core/Snackbar";
+import Tooltip from "@material-ui/core/Tooltip";
+import * as Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 import "../App.css";
 
 class Customerlist extends Component {
@@ -37,6 +41,9 @@ class Customerlist extends Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
+
+  handleDateTimePicker = (moment, name) =>
+    this.setState({ [name]: moment.toDate() });
 
   // Get all customers
   listCustomers = () => {
@@ -97,119 +104,154 @@ class Customerlist extends Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(training)
     });
+    this.setState({
+      date: "",
+      activity: "",
+      duration: ""
+    });
     this.addModal2.current.hide();
   };
 
   handleClose = () => {
     this.setState({
-        showSnack: false
+      showSnack: false
     });
-};
+  };
 
   render() {
     const customerColumns = [
       {
-        Header: "Add trainings",
-        accessor: "links[0].href",
-        filterable: false,
-        sortable: false,
-        Cell: ({ value }) => (
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={() => this.setCustomer(value)}
-          >
-            <AddIcon />
-          </Button>
-        )
+        Header: "Add/List",
+        columns: [
+          {
+            Header: "",
+            accessor: "links[0].href",
+            maxWidth: 60,
+            filterable: false,
+            sortable: false,
+            Cell: ({ value }) => (
+              <Tooltip title="Add new training">
+                <Iconbutton
+                  size="small"
+                  color="primary"
+                  onClick={() => this.setCustomer(value)}
+                >
+                  <AddIcon fontSize="small" />
+                </Iconbutton>
+              </Tooltip>
+            )
+          },
+          {
+            Header: "",
+            accessor: "links[2].href",
+            maxWidth: 60,
+            filterable: false,
+            sortable: false,
+            Cell: ({ value }) => (
+              <Tooltip title="Show trainings for this customer">
+                <Iconbutton
+                  color="primary"
+                  size="small"
+                  onClick={() => this.getTrainings(value)}
+                >
+                  <ListAlt fontSize="small" />
+                </Iconbutton>
+              </Tooltip>
+            )
+          }
+        ]
       },
       {
-        Header: "Firstname",
-        accessor: "firstname"
+        Header: "Customer details",
+        columns: [
+          {
+            Header: "Firstname",
+            accessor: "firstname"
+          },
+          {
+            Header: "Lastname",
+            accessor: "lastname"
+          },
+          {
+            Header: "Street address",
+            accessor: "streetaddress"
+          },
+          {
+            Header: "Postal code",
+            accessor: "postcode"
+          },
+          {
+            Header: "City",
+            accessor: "city"
+          },
+          {
+            Header: "Email",
+            accessor: "email"
+          },
+          {
+            Header: "Phone number",
+            accessor: "phone"
+          }
+        ]
       },
       {
-        Header: "Lastname",
-        accessor: "lastname"
-      },
-      {
-        Header: "Street address",
-        accessor: "streetaddress"
-      },
-      {
-        Header: "Postal code",
-        accessor: "postcode"
-      },
-      {
-        Header: "City",
-        accessor: "city"
-      },
-      {
-        Header: "Email",
-        accessor: "email"
-      },
-      {
-        Header: "Phone",
-        accessor: "phone"
-      },
-      {
-        Header: "Training sessions",
-        accessor: "links[2].href",
-        filterable: false,
-        sortable: false,
-        Cell: ({ value }) => (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => this.getTrainings(value)}
-          >
-            <ListAlt />
-          </Button>
-        )
-      },
-      {
-        Header: "",
-        accessor: "links[0].href",
-        filterable: false,
-        sortable: false,
-        Cell: ({ value }) => (
-          <Button
-            onClick={() => {
-              if (
-                window.confirm(
-                  "Are you sure you want to delete this customer (and their trainings) permanently?"
-                )
-              )
-                this.deleteCustomer(value);
-            }}
-            aria-label="Delete"
-          >
-            <DeleteIcon fontSize="small" />
-          </Button>
-        )
+        Header: "Delete",
+        columns: [
+          {
+            Header: "",
+            accessor: "links[0].href",
+            maxWidth: 80,
+            filterable: false,
+            sortable: false,
+            Cell: ({ value }) => (
+              <Tooltip title="Delete this customer">
+                <Iconbutton
+                  color="secondary"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this customer (and their trainings) permanently?"
+                      )
+                    )
+                      this.deleteCustomer(value);
+                  }}
+                  aria-label="Delete"
+                >
+                  <DeleteIcon fontSize="small" />
+                </Iconbutton>
+              </Tooltip>
+            )
+          }
+        ]
       }
     ];
 
     const individualTrainingColumns = [
       {
-        Header: "Date and time",
-        accessor: "date",
-        Cell: ({ value }) => Moment(value).format("MMM Do YYYY, h:mm a")
-      },
-      {
-        Header: "Duration (in minutes)",
-        accessor: "duration"
-      },
-      {
         Header: "Activity",
         accessor: "activity"
+      },
+      {
+        Header: "Date and time",
+        accessor: "date",
+        Cell: ({ value }) => Moment(value).format("MMM Do YYYY, hh:mm a")
+      },
+      {
+        Header: "Duration",
+        maxWidth: 80,
+        accessor: "duration"
       }
     ];
 
-    const addDialog = {
-      width: "250px",
-      height: "250px",
+    const newTrainingDialog = {
+      width: "300px",
+      height: "350px",
       marginLeft: "-15%"
+    };
+
+    const trainingModalStyle = {
+      marginTop: "-400px",
+      maxWidth: "600px"
     };
 
     return (
@@ -222,43 +264,60 @@ class Customerlist extends Component {
           data={this.state.customers}
           columns={customerColumns}
         />
-        <SkyLight hideOnOverlayClicked ref={this.addModal}>
-          <h3>Individual training sessions</h3>
-          <ReactTable
-            filterable={true}
-            defaultPageSize={10}
-            className="-striped -highlight"
-            data={this.state.trainings}
-            columns={individualTrainingColumns}
-          />
-        </SkyLight>
+        <div className="flextest">
+          <SkyLight
+            dialogStyles={trainingModalStyle}
+            hideOnOverlayClicked
+            ref={this.addModal}
+          >
+            <div className="container">
+              <h3>Individual training sessions</h3>
+              <ReactTable
+                filterable={true}
+                defaultPageSize={10}
+                className="-striped -highlight"
+                data={this.state.trainings}
+                columns={individualTrainingColumns}
+              />
+            </div>
+          </SkyLight>
+        </div>
         <SkyLight
-          dialogStyles={addDialog}
+          dialogStyles={newTrainingDialog}
           hideOnOverlayClicked
           ref={this.addModal2}
           title="Add new training"
         >
-          <TextField
-            placeholder="Date"
-            name="date"
-            type="date"
-            onChange={this.handleChange}
+          <Datetime
+            inputProps={{
+              required: "true",
+              placeholder: "  Click to select time and date*",
+              id: "datetime"
+            }}
+            onChange={moment => this.handleDateTimePicker(moment, "date")}
             value={this.state.date}
           />
           <br />
           <TextField
-            placeholder="Activity"
+            required
+            style={{ margin: "5px" }}
+            label="Activity"
             name="activity"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.activity}
           />
           <TextField
-            placeholder="Duration"
+            required
+            style={{ margin: "5px" }}
+            label="Duration"
             name="duration"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.duration}
           />
           <br />
+
           <Button
             style={{ margin: 10 }}
             variant="contained"

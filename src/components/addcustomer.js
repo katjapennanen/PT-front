@@ -53,77 +53,96 @@ class addcustomer extends Component {
   };
 
   render() {
-    const addDialog = {
-      width: "250px",
-      height: "250px",
-      marginLeft: "-15%"
+    const newCustomerDialog = {
+      width: "500px",
+      height: "400px",
+      marginLeft: "-15%",
     };
-    
+
     return (
       <div>
-        <Button
-          style={{ position: "relative", right: "100px" }}
-          variant="contained"
-          color="primary"
-          onClick={() => this.addModal.current.show()}
-        >
-          <AddIcon /> New customer
-        </Button>
+        <div className="buttonTest">
+          <Button
+            style={{ width: "150px" }}
+            variant="contained"
+            color="primary"
+            onClick={() => this.addModal.current.show()}
+          >
+            <AddIcon /> New customer
+          </Button>
+        </div>
         <SkyLight
-          dialogStyles={addDialog}
+          dialogStyles={newCustomerDialog}
           hideOnOverlayClicked
           ref={this.addModal}
           title="Add a new customer"
         >
           <TextField
-            placeholder="First name"
+          type="text"
+            required={true}
+            style={{ margin: "5px" }}
+            label="First name"
             name="firstname"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.firstname}
           />
-          <br />
           <TextField
-            placeholder="Last name"
+            required={true}
+            style={{ margin: "5px" }}
+            label="Last name"
             name="lastname"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.lastname}
           />
           <TextField
-            placeholder="Street address"
+            required
+            style={{ margin: "5px" }}
+            label="Street address"
             name="streetaddress"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.streetaddress}
           />
-          <br />
           <TextField
-            placeholder="Postal code"
+            required
+            style={{ margin: "5px" }}
+            label="Postal code"
             name="postcode"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.postcode}
           />
-          <br />
           <TextField
-            placeholder="City"
+            required
+            style={{ margin: "5px" }}
+            label="City"
             name="city"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.city}
           />
-          <br />
           <TextField
-            placeholder="Email address"
+            required
+            style={{ margin: "5px" }}
+            label="Email address"
             name="email"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.email}
           />
-          <br />
           <TextField
-            placeholder="Phone number"
+            required
+            style={{ margin: "5px" }}
+            label="Phone number"
             name="phone"
+            variant="outlined"
             onChange={this.handleChange}
             value={this.state.phone}
           />
           <Button
-            style={{ margin: 10 }}
+            style={{ margin: "5px", width: "197px", height: "55px" }}
             variant="contained"
             color="primary"
             onClick={this.saveCustomer}
