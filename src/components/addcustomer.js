@@ -54,15 +54,15 @@ class addcustomer extends Component {
   render() {
     const newCustomerModalStyle = {
       margin: "auto -250px",
-      width: "500px",
-      top: "10%"
+      width: 500,
+      top: "9%"
     };
 
     return (
       <div>
         <div className="menuButtons">
           <Button
-            style={{ width: "150px", marginBottom: "10%" }}
+            style={{ width: 150, marginBottom: "10%" }}
             variant="contained"
             color="primary"
             onClick={() => this.addCustomerModal.current.show()}
@@ -79,7 +79,7 @@ class addcustomer extends Component {
           <form onSubmit={this.saveCustomer}>
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="First name"
               name="firstname"
               variant="outlined"
@@ -88,7 +88,7 @@ class addcustomer extends Component {
             />
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="Last name"
               name="lastname"
               variant="outlined"
@@ -97,7 +97,7 @@ class addcustomer extends Component {
             />
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="Street address"
               name="streetaddress"
               variant="outlined"
@@ -106,7 +106,7 @@ class addcustomer extends Component {
             />
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="Postal code"
               name="postcode"
               variant="outlined"
@@ -115,7 +115,7 @@ class addcustomer extends Component {
             />
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="City"
               name="city"
               variant="outlined"
@@ -125,7 +125,7 @@ class addcustomer extends Component {
             <TextField
               required={true}
               type="email"
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="Email address"
               name="email"
               variant="outlined"
@@ -134,7 +134,7 @@ class addcustomer extends Component {
             />
             <TextField
               required={true}
-              style={{ margin: "5px" }}
+              style={{ margin: 5 }}
               label="Phone number"
               name="phone"
               variant="outlined"
@@ -143,12 +143,20 @@ class addcustomer extends Component {
             />
             <Button
               type="submit"
-              style={{ margin: "5px", width: "197px", height: "55px" }}
+              style={{ margin: 5, height: 53, width: 95 }}
               variant="contained"
               color="primary"
             >
               <SaveIcon />Save
             </Button>
+            <Button
+                onClick={() => this.addCustomerModal.current.hide()}
+                style={{ margin: 3, height: 53, width: 95 }}
+                variant="contained"
+                color="secondary"
+              >
+                Cancel
+              </Button>
           </form>
         </SkyLight>
       </div>

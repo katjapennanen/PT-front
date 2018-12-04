@@ -28,7 +28,7 @@ body {
 }
 
 .container {
-  height: 700px;
+  height: 100%;
   overflow: auto;
   margin-right: 17px;
 }

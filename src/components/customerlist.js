@@ -254,15 +254,17 @@ class Customerlist extends Component {
             sortable: false,
             Cell: ({ row, value }) => (
               <Tooltip title="Save updated customer">
-                <Iconbutton onClick={() => {
-                  if (
-                    window.confirm(
-                      "Are you sure you want to save all changes?"
+                <Iconbutton
+                  color="primary"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to save all changes?"
+                      )
                     )
-                  )
-                  this.updateCustomer(row, value)
-                }
-                  }>
+                      this.updateCustomer(row, value);
+                  }}
+                >
                   <SaveIcon fontSize="small" />
                 </Iconbutton>
               </Tooltip>
@@ -320,16 +322,15 @@ class Customerlist extends Component {
     ];
 
     const newTrainingModalStyle = {
-      width: "350px",
-      height: "620px",
-      margin: "auto -175px",
-      top: "10%"
+      width: 400,
+      margin: "auto -200px",
+      top: "9%"
     };
 
     const trainingModalStyle = {
       margin: "auto -300px",
-      width: "600px",
-      top: "10%"
+      width: 600,
+      top: "9%"
     };
 
     return (
@@ -380,7 +381,7 @@ class Customerlist extends Component {
               />
               <TextField
                 required={true}
-                style={{ margin: "5px" }}
+                style={{ margin: 5 }}
                 label="Activity"
                 name="activity"
                 variant="outlined"
@@ -390,7 +391,7 @@ class Customerlist extends Component {
               <br />
               <TextField
                 required={true}
-                style={{ margin: "5px" }}
+                style={{ margin: 5 }}
                 label="Duration (in minutes)"
                 name="duration"
                 variant="outlined"
@@ -406,6 +407,14 @@ class Customerlist extends Component {
               >
                 <SaveIcon />
                 Save
+              </Button>
+              <Button
+                onClick={() => this.newTrainingModal.current.hide()}
+                style={{ margin: 10, height: 40 }}
+                variant="contained"
+                color="secondary"
+              >
+                Cancel
               </Button>
             </div>
           </form>

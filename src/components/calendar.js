@@ -48,15 +48,15 @@ class calendar extends Component {
   render() {
     const calendarModalStyle = {
       margin: "auto -450px",
-      width: "900px",
-      top: "10%"
+      width: 900,
+      top: "9%"
     };
 
     return (
       <div>
         <div className="menuButtons">
           <Button
-            style={{ width: "150px", marginLeft: "110%", marginBottom: "-72%" }}
+            style={{ width: 150, marginLeft: "110%", marginBottom: "-72%" }}
             variant="contained"
             color="primary"
             onClick={() => {this.getAllTrainings()}}
@@ -71,6 +71,7 @@ class calendar extends Component {
         ><div className="container">
           <BigCalendar
             popup
+            style={{ height: 600,}}
             culture='en-GB'
             localizer={localizer}
             events={this.state.events}

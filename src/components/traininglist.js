@@ -47,21 +47,26 @@ class Traininglist extends Component {
       {
         Header: "Firstname",
         accessor: "customer.firstname"
-      }, {
+      },
+      {
         Header: "Lastname",
         accessor: "customer.lastname"
-      }, {
+      },
+      {
         Header: "Date and time",
         accessor: "date",
         Cell: ({ value }) => Moment(value).format("DD.MM.YYYY, hh:mm a")
-      }, {
+      },
+      {
         Header: "Duration (min)",
         accessor: "duration",
         maxWidth: 120
-      }, {
+      },
+      {
         Header: "Activity",
         accessor: "activity"
-      }, {
+      },
+      {
         Header: "",
         accessor: "id",
         maxWidth: 80,
@@ -91,20 +96,22 @@ class Traininglist extends Component {
 
     const trainingModalStyle = {
       margin: "auto -450px",
-      width: "900px",
-      top: "10%"
+      width: 900,
+      height: "80%",
+      top: "9%"
     };
 
     return (
       <div>
         <div className="menuButtons">
           <Button
-            style={{ width: "150px", marginLeft: "220%", marginBottom: "-44%" }}
+            style={{ width: 150, marginLeft: "220%", marginBottom: "-44%" }}
             variant="contained"
             color="primary"
             onClick={this.getAllTrainings}
           >
-            <ListIcon />Show all trainings
+            <ListIcon />
+            Show all trainings
           </Button>
         </div>
         <SkyLight
