@@ -1,22 +1,30 @@
+
+body {
+  background-color: #33373f;
+}
 .App {
   text-align: center;
-  max-width: 1300px;
+  max-width: 80%;
   margin: auto;
 }
 
 .App-header {
   background-color: #282c34;
-  max-height: 85px;
+  min-height: 50;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: calc(5px + 2vmin);
+  color: rgb(216, 206, 206);
+  margin-bottom: -28px;
 }
 
 .maintable {
-  margin-top: 10px;
+  width: 100%;
+  background-color: #f7f1f4;
+  margin-bottom: 30px;
 }
 
 .container {
@@ -25,16 +33,12 @@
   margin-right: 17px;
 }
 
-.buttonTest {
+.menuButtons {
   float: left;
   clear: left;
-  margin: 10px 20px 0 0;
 }
 
-#datetime {
-  height:50px;
-  width: 194px;
-  margin: 0 0 -15px 0;
-  border: 1px solid rgb(185, 185, 185);
-  border-radius: 5px
+#newTrainingInputs {
+  display: inline-block;
+  margin: auto;
 }
