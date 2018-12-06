@@ -45,16 +45,24 @@ class Traininglist extends Component {
   render() {
     const trainingColumns = [
       {
+        Header: "Activity",
+        accessor: "activity"
+      },
+      {
         Header: "Firstname",
-        accessor: "customer.firstname"
+        accessor: "customer.firstname",
+        maxWidth: 150
       },
       {
         Header: "Lastname",
-        accessor: "customer.lastname"
+        accessor: "customer.lastname",
+        maxWidth: 150
       },
       {
         Header: "Date and time",
         accessor: "date",
+        filterable: false,
+        sortable: false,
         Cell: ({ value }) => Moment(value).format("DD.MM.YYYY, hh:mm a")
       },
       {
@@ -63,13 +71,9 @@ class Traininglist extends Component {
         maxWidth: 120
       },
       {
-        Header: "Activity",
-        accessor: "activity"
-      },
-      {
         Header: "",
         accessor: "id",
-        maxWidth: 80,
+        maxWidth: 40,
         filterable: false,
         sortable: false,
         Cell: ({ value }) => (
@@ -77,6 +81,7 @@ class Traininglist extends Component {
             <Iconbutton
               color="secondary"
               size="small"
+              style={{ height: 12, width: 12 }}
               onClick={() => {
                 if (
                   window.confirm(
@@ -123,7 +128,7 @@ class Traininglist extends Component {
             <h3>All training sessions</h3>
             <ReactTable
               filterable={true}
-              defaultPageSize={10}
+              defaultPageSize={13}
               className="-striped -highlight"
               data={this.state.trainings}
               columns={trainingColumns}

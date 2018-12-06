@@ -9,7 +9,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = BigCalendar.momentLocalizer(Moment);
 
-
 class calendar extends Component {
   constructor(props) {
     super(props);

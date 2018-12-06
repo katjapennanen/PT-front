@@ -25,8 +25,7 @@ class addcustomer extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  // Save input data to states, save them to a variable 'customer' and send that variable to the saveCustomer function in customerlist.js
-  // or get the function saveCustomer from customerlist.js as a prop
+  // Save customer
   saveCustomer = event => {
     event.preventDefault();
     const customer = {
@@ -62,7 +61,7 @@ class addcustomer extends Component {
       <div>
         <div className="menuButtons">
           <Button
-            style={{ width: 150, marginBottom: "10%" }}
+            style={{ width: 150, marginBottom: "-5%" }}
             variant="contained"
             color="primary"
             onClick={() => this.addCustomerModal.current.show()}

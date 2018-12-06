@@ -8,13 +8,13 @@ import SkyLight from "react-skylight";
 import Moment from "moment";
 import Addcustomer from "./addcustomer";
 import AddIcon from "@material-ui/icons/Add";
+import Autorenew from "@material-ui/icons/Autorenew";
 import TextField from "@material-ui/core/TextField";
 import SaveIcon from "@material-ui/icons/Save";
 import Snackbar from "@material-ui/core/Snackbar";
 import Tooltip from "@material-ui/core/Tooltip";
-import * as Datetime from "react-datetime";
+import DateTimePicker from "react-datetime-picker";
 import "react-table/react-table.css";
-import "react-datetime/css/react-datetime.css";
 
 class Customerlist extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Customerlist extends Component {
       customers: [],
       individualTrainings: [],
       customer: "",
-      date: "",
+      date: new Date(),
       activity: "",
       duration: "",
       showDeleteSnack: false,
@@ -45,10 +45,8 @@ class Customerlist extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  // Get date and time in correct format
-  handleDateTimePicker = (moment, name) => {
-    this.setState({ [name]: moment.toDate() });
-  };
+  // Get date and time input
+  handleDateTimeChange = date => this.setState({ date });
 
   // Get all customers
   getCustomers = () => {
@@ -103,7 +101,7 @@ class Customerlist extends Component {
     });
   };
 
-  // Render table cells in editable form
+  // Render customer table cells in editable form
   renderEditable = cellInfo => {
     return (
       <div
@@ -163,12 +161,12 @@ class Customerlist extends Component {
   render() {
     const customerColumns = [
       {
-        Header: "Add/List",
+        Header: "",
         columns: [
           {
             Header: "",
             accessor: "links[0].href",
-            maxWidth: 60,
+            maxWidth: 40,
             filterable: false,
             sortable: false,
             Cell: ({ value }) => (
@@ -176,6 +174,7 @@ class Customerlist extends Component {
                 <Iconbutton
                   size="small"
                   color="primary"
+                  style={{ height: 12, width: 12 }}
                   onClick={() => this.setCustomer(value)}
                 >
                   <AddIcon fontSize="small" />
@@ -186,7 +185,7 @@ class Customerlist extends Component {
           {
             Header: "",
             accessor: "links[2].href",
-            maxWidth: 60,
+            maxWidth: 40,
             filterable: false,
             sortable: false,
             Cell: ({ value }) => (
@@ -194,9 +193,61 @@ class Customerlist extends Component {
                 <Iconbutton
                   color="primary"
                   size="small"
+                  style={{ height: 12, width: 12 }}
                   onClick={() => this.getTrainings(value)}
                 >
                   <ListAlt fontSize="small" />
+                </Iconbutton>
+              </Tooltip>
+            )
+          },
+          {
+            Header: "",
+            accessor: "links[0].href",
+            maxWidth: 40,
+            filterable: false,
+            sortable: false,
+            Cell: ({ row, value }) => (
+              <Tooltip title="Save updated customer">
+                <Iconbutton
+                  color="primary"
+                  style={{ height: 12, width: 12 }}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to save all changes?"
+                      )
+                    )
+                      this.updateCustomer(row, value);
+                  }}
+                >
+                  <SaveIcon fontSize="small" />
+                </Iconbutton>
+              </Tooltip>
+            )
+          },
+          {
+            Header: "",
+            accessor: "links[0].href",
+            maxWidth: 40,
+            filterable: false,
+            sortable: false,
+            Cell: ({ value }) => (
+              <Tooltip title="Delete this customer">
+                <Iconbutton
+                  color="secondary"
+                  style={{ height: 12, width: 12 }}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this customer (and their trainings) permanently?"
+                      )
+                    )
+                      this.deleteCustomer(value);
+                  }}
+                  aria-label="Delete"
+                >
+                  <DeleteIcon fontSize="small" />
                 </Iconbutton>
               </Tooltip>
             )
@@ -239,66 +290,8 @@ class Customerlist extends Component {
           {
             Header: "Phone number",
             accessor: "phone",
+            sortable: false,
             Cell: this.renderEditable
-          }
-        ]
-      },
-      {
-        Header: "Save",
-        columns: [
-          {
-            Header: "",
-            accessor: "links[0].href",
-            maxWidth: 60,
-            filterable: false,
-            sortable: false,
-            Cell: ({ row, value }) => (
-              <Tooltip title="Save updated customer">
-                <Iconbutton
-                  color="primary"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to save all changes?"
-                      )
-                    )
-                      this.updateCustomer(row, value);
-                  }}
-                >
-                  <SaveIcon fontSize="small" />
-                </Iconbutton>
-              </Tooltip>
-            )
-          }
-        ]
-      },
-      {
-        Header: "Delete",
-        columns: [
-          {
-            Header: "",
-            accessor: "links[0].href",
-            maxWidth: 80,
-            filterable: false,
-            sortable: false,
-            Cell: ({ value }) => (
-              <Tooltip title="Delete this customer">
-                <Iconbutton
-                  color="secondary"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to delete this customer (and their trainings) permanently?"
-                      )
-                    )
-                      this.deleteCustomer(value);
-                  }}
-                  aria-label="Delete"
-                >
-                  <DeleteIcon fontSize="small" />
-                </Iconbutton>
-              </Tooltip>
-            )
           }
         ]
       }
@@ -336,9 +329,25 @@ class Customerlist extends Component {
     return (
       <div>
         <Addcustomer saveCustomer={this.saveCustomer} />
+        <div className="menuButtons">
+          <Button
+            style={{
+              width: 150,
+              marginTop: "-61%",
+              marginBottom: "-20%",
+              marginLeft: "330%"
+            }}
+            variant="contained"
+            color="primary"
+            onClick={this.getCustomers}
+          >
+            <Autorenew />
+            Reload customers
+          </Button>
+        </div>
         <ReactTable
           filterable={true}
-          defaultPageSize={10}
+          defaultPageSize={13}
           className="maintable -striped -highlight"
           data={this.state.customers}
           columns={customerColumns}
@@ -352,7 +361,7 @@ class Customerlist extends Component {
             <h3>Individual training appointments</h3>
             <ReactTable
               filterable={true}
-              defaultPageSize={10}
+              defaultPageSize={7}
               className="-striped -highlight"
               data={this.state.individualTrainings}
               columns={individualTrainingColumns}
@@ -367,18 +376,6 @@ class Customerlist extends Component {
         >
           <form onSubmit={this.saveTraining}>
             <div id="newTrainingInputs">
-              <p>Pick date and time</p>
-              <Datetime
-                inputProps={{
-                  required: true,
-                  placeholder: "  Click to select time and date*",
-                  id: "datetime"
-                }}
-                input={false}
-                strictParsing={false}
-                onChange={moment => this.handleDateTimePicker(moment, "date")}
-                value={this.state.date}
-              />
               <TextField
                 required={true}
                 style={{ margin: 5 }}
@@ -397,6 +394,14 @@ class Customerlist extends Component {
                 variant="outlined"
                 onChange={this.handleChange}
                 value={this.state.duration}
+              />
+              <p>Pick date and time</p>
+              <DateTimePicker
+                locale="en-GB"
+                showLeadingZeros={true}
+                showWeekNumbers={true}
+                onChange={this.handleDateTimeChange}
+                value={this.state.date}
               />
               <br />
               <Button
