@@ -9,7 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = BigCalendar.momentLocalizer(Moment);
 
-class calendar extends Component {
+class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = { trainings: [], events: [] };
@@ -82,4 +82,4 @@ class calendar extends Component {
   }
 }
 
-export default calendar;
+export default Calendar;

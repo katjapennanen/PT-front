@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Customerlist from "./components/customerlist";
-import Traininglist from "./components/traininglist";
-import Calendar from "./components/calendar";
+import CustomerList from "./components/CustomerList";
+import TrainingList from "./components/TrainingList";
+import Calendar from "./components/Calendar";
 import "./App.css";
 
 class App extends Component {
@@ -12,8 +12,8 @@ class App extends Component {
           <h2>Personal training customer & appointment manager</h2>
         </header>
         <Calendar />
-        <Traininglist />
-        <Customerlist />
+        <TrainingList />
+        <CustomerList />
       </div>
     );
   }

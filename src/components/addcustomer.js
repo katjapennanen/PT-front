@@ -5,7 +5,7 @@ import SkyLight from "react-skylight";
 import SaveIcon from "@material-ui/icons/Save";
 import AddIcon from "@material-ui/icons/Add";
 
-class addcustomer extends Component {
+class AddCustomer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -163,4 +163,4 @@ class addcustomer extends Component {
   }
 }
 
-export default addcustomer;
+export default AddCustomer;

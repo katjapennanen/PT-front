@@ -2,37 +2,26 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import Button from "@material-ui/core/Button";
 import Iconbutton from "@material-ui/core/IconButton";
-import ListAlt from "@material-ui/icons/ListAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
-import SkyLight from "react-skylight";
-import Moment from "moment";
-import Addcustomer from "./addcustomer";
-import AddIcon from "@material-ui/icons/Add";
+import AddCustomer from "./AddCustomer";
+import AddTraining from "./AddTraining";
 import Autorenew from "@material-ui/icons/Autorenew";
-import TextField from "@material-ui/core/TextField";
 import SaveIcon from "@material-ui/icons/Save";
 import Snackbar from "@material-ui/core/Snackbar";
 import Tooltip from "@material-ui/core/Tooltip";
-import DateTimePicker from "react-datetime-picker";
 import "react-table/react-table.css";
+import IndividualTrainingList from "./IndividualTrainingsList";
 
-class Customerlist extends Component {
+class CustomerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       customers: [],
-      individualTrainings: [],
-      customer: "",
-      date: new Date(),
-      activity: "",
-      duration: "",
       showDeleteSnack: false,
       showAddCustomerSnack: false,
       showAddTrainingSnack: false,
       updateCustomerSnack: false
     };
-    this.individualTrainingsModal = React.createRef();
-    this.newTrainingModal = React.createRef();
   }
 
   // Show all customers on page load
@@ -45,9 +34,6 @@ class Customerlist extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  // Get date and time input
-  handleDateTimeChange = date => this.setState({ date });
-
   // Get all customers
   getCustomers = () => {
     fetch("https://customerrest.herokuapp.com/api/customers")
@@ -55,18 +41,6 @@ class Customerlist extends Component {
       .then(responseData => {
         this.setState({ customers: responseData.content });
       });
-  };
-
-  // Get individual trainings
-  getTrainings = link => {
-    fetch(link)
-      .then(response => response.json())
-      .then(responseData => {
-        this.setState({
-          individualTrainings: responseData.content
-        });
-      });
-    this.individualTrainingsModal.current.show();
   };
 
   // Delete a customer
@@ -101,6 +75,25 @@ class Customerlist extends Component {
     });
   };
 
+  // Save a new training
+  saveTraining = training => {
+    fetch("https://customerrest.herokuapp.com/api/trainings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(training)
+    });
+    this.setState({ showAddTrainingSnack: true });
+  };
+
+  handleSnackClose = () => {
+    this.setState({
+      showDeleteSnack: false,
+      showAddCustomerSnack: false,
+      showAddTrainingSnack: false,
+      updateCustomerSnack: false
+    });
+  };
+
   // Render customer table cells in editable form
   renderEditable = cellInfo => {
     return (
@@ -120,44 +113,6 @@ class Customerlist extends Component {
     );
   };
 
-  // Set customer's url to a state to be used to create new training
-  setCustomer = customer => {
-    this.setState({ customer: customer });
-    this.newTrainingModal.current.show();
-  };
-
-  // Save a new training
-  saveTraining = event => {
-    event.preventDefault();
-    const training = {
-      date: this.state.date,
-      activity: this.state.activity,
-      duration: this.state.duration,
-      customer: this.state.customer
-    };
-    fetch("https://customerrest.herokuapp.com/api/trainings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(training)
-    });
-    this.setState({
-      date: "",
-      activity: "",
-      duration: ""
-    });
-    this.newTrainingModal.current.hide();
-    this.setState({ showAddTrainingSnack: true });
-  };
-
-  handleClose = () => {
-    this.setState({
-      showDeleteSnack: false,
-      showAddCustomerSnack: false,
-      showAddTrainingSnack: false,
-      updateCustomerSnack: false
-    });
-  };
-
   render() {
     const customerColumns = [
       {
@@ -170,16 +125,7 @@ class Customerlist extends Component {
             filterable: false,
             sortable: false,
             Cell: ({ value }) => (
-              <Tooltip title="Add new training">
-                <Iconbutton
-                  size="small"
-                  color="primary"
-                  style={{ height: 12, width: 12 }}
-                  onClick={() => this.setCustomer(value)}
-                >
-                  <AddIcon fontSize="small" />
-                </Iconbutton>
-              </Tooltip>
+              <AddTraining customer={value} saveTraining={this.saveTraining} />
             )
           },
           {
@@ -189,16 +135,7 @@ class Customerlist extends Component {
             filterable: false,
             sortable: false,
             Cell: ({ value }) => (
-              <Tooltip title="Show trainings for this customer">
-                <Iconbutton
-                  color="primary"
-                  size="small"
-                  style={{ height: 12, width: 12 }}
-                  onClick={() => this.getTrainings(value)}
-                >
-                  <ListAlt fontSize="small" />
-                </Iconbutton>
-              </Tooltip>
+             <IndividualTrainingList customerTrainingUrl={value}/>
             )
           },
           {
@@ -297,38 +234,9 @@ class Customerlist extends Component {
       }
     ];
 
-    const individualTrainingColumns = [
-      {
-        Header: "Activity",
-        accessor: "activity"
-      },
-      {
-        Header: "Date and time",
-        accessor: "date",
-        Cell: ({ value }) => Moment(value).format("DD.MM.YYYY, hh:mm a")
-      },
-      {
-        Header: "Duration",
-        maxWidth: 80,
-        accessor: "duration"
-      }
-    ];
-
-    const newTrainingModalStyle = {
-      width: 400,
-      margin: "auto -200px",
-      top: "9%"
-    };
-
-    const trainingModalStyle = {
-      margin: "auto -300px",
-      width: 600,
-      top: "9%"
-    };
-
     return (
       <div>
-        <Addcustomer saveCustomer={this.saveCustomer} />
+        <AddCustomer saveCustomer={this.saveCustomer} />
         <div className="menuButtons">
           <Button
             style={{
@@ -352,105 +260,33 @@ class Customerlist extends Component {
           data={this.state.customers}
           columns={customerColumns}
         />
-        <SkyLight
-          dialogStyles={trainingModalStyle}
-          hideOnOverlayClicked
-          ref={this.individualTrainingsModal}
-        >
-          <div className="container">
-            <h3>Individual training appointments</h3>
-            <ReactTable
-              filterable={true}
-              defaultPageSize={7}
-              className="-striped -highlight"
-              data={this.state.individualTrainings}
-              columns={individualTrainingColumns}
-            />
-          </div>
-        </SkyLight>
-        <SkyLight
-          dialogStyles={newTrainingModalStyle}
-          hideOnOverlayClicked
-          ref={this.newTrainingModal}
-          title="Add new training appointment"
-        >
-          <form onSubmit={this.saveTraining}>
-            <div id="newTrainingInputs">
-              <TextField
-                required={true}
-                style={{ margin: 5 }}
-                label="Activity"
-                name="activity"
-                variant="outlined"
-                onChange={this.handleChange}
-                value={this.state.activity}
-              />
-              <br />
-              <TextField
-                required={true}
-                style={{ margin: 5 }}
-                label="Duration (in minutes)"
-                name="duration"
-                variant="outlined"
-                onChange={this.handleChange}
-                value={this.state.duration}
-              />
-              <p>Pick date and time</p>
-              <DateTimePicker
-                locale="en-GB"
-                showLeadingZeros={true}
-                showWeekNumbers={true}
-                onChange={this.handleDateTimeChange}
-                value={this.state.date}
-              />
-              <br />
-              <Button
-                type="submit"
-                style={{ margin: 10 }}
-                variant="contained"
-                color="primary"
-              >
-                <SaveIcon />
-                Save
-              </Button>
-              <Button
-                onClick={() => this.newTrainingModal.current.hide()}
-                style={{ margin: 10, height: 40 }}
-                variant="contained"
-                color="secondary"
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </SkyLight>
         <Snackbar
           message={"Customer deleted succesfully!"}
           open={this.state.showDeleteSnack}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={this.handleSnackClose}
         />
         <Snackbar
           message={"Customer added succesfully!"}
           open={this.state.showAddCustomerSnack}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={this.handleSnackClose}
         />
         <Snackbar
           message={"Training added succesfully!"}
           open={this.state.showAddTrainingSnack}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={this.handleSnackClose}
         />
         <Snackbar
           message={"Customer info updated succesfully!"}
           open={this.state.updateCustomerSnack}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={this.handleSnackClose}
         />
       </div>
     );
   }
 }
 
-export default Customerlist;
+export default CustomerList;

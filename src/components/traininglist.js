@@ -9,7 +9,7 @@ import Moment from "moment";
 import Tooltip from "@material-ui/core/Tooltip";
 import SkyLight from "react-skylight";
 
-class Traininglist extends Component {
+class TrainingList extends Component {
   constructor(props) {
     super(props);
     this.state = { trainings: [], showDeleteSnack: false };
@@ -146,4 +146,4 @@ class Traininglist extends Component {
   }
 }
 
-export default Traininglist;
+export default TrainingList;
